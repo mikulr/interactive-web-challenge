@@ -47,25 +47,27 @@ function createPlotly(sample) {
         /// NEEDS FORMATTING
         let trace1 = {
             x: chosenSample.sample_values.sort((a, b) => b.sample_values - a.sample_values).slice(0, 10).reverse(),
-            y: chosenSample.otu_ids.sort((a, b) => b.otu_ids - a.otu_ids).slice(0, 10).reverse(),
-            text: chosenSample.otu_labels.sort((a, b) => b.otu_labels - a.otu_labels).slice(0, 10).reverse(),
+            y: chosenSample.otu_ids,
+            text: chosenSample.otu_labels,
             type: "bar",
             orientation: "h"
         };
-
+console.log(trace1)
         let traceData = [trace1];
 
-        let config = { responsive: true };
+        // let config = { responsive: true };
         var layout = {
-            yaxis: {
-              tickmode: "array", // If "array", the placement of the ticks is set via `tickvals` and the tick text is `ticktext`.
-            //   tickvals: [1, 3, 5, 7, 9, 11],
-            //   ticktext: ['One', 'Three', 'Five', 'Seven', 'Nine', 'Eleven']
+            xaxis: {
+                tickmode: "auto", // If "array", the placement of the ticks is set via `tickvals` and the tick text is `ticktext`.
+                tickvals: chosenSample.sample_values,
+                ticktext: chosenSample.otu_labels,
+                showtickprefix: 'all',
+                tickprefix: chosenSample.otu_labels,
             }
-          }
-          
+        }
 
-        Plotly.newPlot("bar", traceData, layout, config);
+
+        Plotly.newPlot("bar", traceData, layout);
 
         /// Create Bubble Chart
         ///NEEDS FORMATTING
@@ -82,12 +84,14 @@ function createPlotly(sample) {
 
         let traceData2 = [trace2];
         // console.log(trace2)  
-        
-        let layout2 =  {xaxis: {
-            title: {
-              text: "OTU ID's",
+
+        let layout2 = {
+            xaxis: {
+                title: {
+                    text: "OTU ID's",
+                },
             },
-          },}
+        }
         Plotly.newPlot("bubble", traceData2, layout2);
 
         //Create MetaData Chart
@@ -97,14 +101,16 @@ function createPlotly(sample) {
         console.log("metaset", metaDataSet);
         //filter down to just the one we want-
         let chosenSampleMeta = metaDataSet.filter(obj => obj.id === sample);
-        console.log(sample);
+
         console.log("meta", chosenSampleMeta);
 
     })
 }
 
 
-// firstPlotly();
+// // Call createPlotly() when a change takes place to the DOM
+// d3.selectAll("#selDataset").on("change", createPlotly);
+
 
 // function optionChanged(updatedSample) {
 //     // Fetch new data each time a new sample is selected
@@ -112,19 +118,20 @@ function createPlotly(sample) {
 // }
 
 
+// This function is called when a dropdown menu item is selected
+function optionChanged() {
+    // Use D3 to select the dropdown menu
+    dropdownMenu = d3.select("#selDataset");
+    dropdownMenu.on("change", function () {
+    updateSample = dropdownMenu.property("value");
+    createPlotly(updateSample);
+    });
+}
 
-// // // Call updatePlotly() when a change takes place to the dropdown
-// // // d3.selectAll("#selDataset").on("change", updatePlotly);
-
-// // // // // // This function is called when a dropdown menu item is selected
-// // // // // function updatePlotly() {
-// // // // //     // Use D3 to select the dropdown menu
-// // // // //     var dropdownMenu = d3.select("#selDataset");
-// // // // //     // Assign the value of the dropdown menu option to a variable
-// // // // //     var dataset = dropdownMenu.property("value");
-
-
-
+// inputField.on("change", function() {
+// //     var newText = d3.event.target.value;
+// //     console.log(newText);
+// //   });
 
 
 
