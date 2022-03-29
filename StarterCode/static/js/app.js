@@ -1,7 +1,7 @@
 // Fetch the JSON data, console log it 
 d3.json("samples.json").then((data) => {
-        console.log(data);
-    });
+    console.log(data);
+});
 
 
 
@@ -55,10 +55,10 @@ function createPlotly(sample) {
         console.log("idList:", idList);
         // Just pulling the otu_ids is a bunch of numbers, which makes the bar not work
         // Run a loop to add text to the number which then means it displays cotrectly
-        let formattedId= idList.map(i => "OTU-ID " + i)
+        let formattedId = idList.map(i => "OTU-ID " + i)
         console.log("formattedId:", formattedId);
 
-        
+
         let trace1 = {
             x: chosenSample.sample_values.sort((a, b) => b.sample_values - a.sample_values).slice(0, 10).reverse(),
             y: formattedId,
@@ -70,8 +70,8 @@ function createPlotly(sample) {
         console.log("trace1;", trace1)
         let traceData = [trace1];
 
-        let config = {responsive: true};
-   
+        let config = { responsive: true };
+
         Plotly.newPlot("bar", traceData, config);
 
         /// Create Bubble Chart using chosen sample
@@ -102,20 +102,26 @@ function createPlotly(sample) {
         //Metadata Box
         //Write my loop to pull pairs of data and confirm in console
         for (var key in chosenSampleMeta) {
-            console.log(key, chosenSampleMeta[key]);}
+            console.log(key, chosenSampleMeta[key]);
+        }
         // Add a table class and tbody tags to index.html and call that here
         let tbody = d3.select("tbody");
         // Run Loop
-        for (var key in chosenSampleMeta){
+        for (var key in chosenSampleMeta) {
             // Append one table row per pair
             var row = tbody.append("tr");
             // append one cell for the key and one cell for the value
             row.append("td").text(key);
             row.append("td").text(chosenSampleMeta[key]);
-          };
-        });
+        };
+
+
+
+
+
+    });
 }
-    
+
 
 // This function is called when a dropdown menu item is selected
 function optionChanged() {
@@ -126,7 +132,7 @@ function optionChanged() {
     // Grab the new vaule in the selector, call it update sample
     updateSample = dropdown.property("value");
     //Send that secection to createPlotly which will update the values for the images  
-   // additonally, clear the rows from the metadata table, otherwise it stacks on top
+    // additonally, clear the rows from the metadata table, otherwise it stacks on top
     d3.selectAll('tr').remove()
     createPlotly(updateSample);
 };
