@@ -4,14 +4,14 @@ establish starting ID value for all graphs
 
 populate dropdown with id's
 
-use the initial id as openingSample to 
+use the initial id as openingSample
 
-FUNCTION drawplots (for sample that will be passed in from dropdown)
-    How to get to 
-
+FUNCTION drawplotly 
+   
         metadata
             filter by id by matching  the "sample" with metadata.id
-                grab metadata key : value
+            grab metadata key : value via loop?
+
         
         bar
             filter by id by matching  the "sample" with samples.id
@@ -36,11 +36,6 @@ FUNCTION drawplots (for sample that will be passed in from dropdown)
 
     bonus- gauge
 
-
-
 watch the dropdown for change
-FUNCTION on change set sample
-    trigger draw function
-
-FUNCTION redraw plots with newId
-    can this function call first function with new variable as id
+FUNCTION on change get sample from value chosen
+    send sample back to draw plotly
