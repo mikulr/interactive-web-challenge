@@ -43,33 +43,40 @@ function createPlotly(sample) {
         let chosenSample = sampleSet.filter(obj => obj.id === sample)[0];
         console.log("chosen", chosenSample);
 
-        //Create the Bar Chart
+        //Create the Bar Chart using chosen sample
         /// NEEDS FORMATTING
         let trace1 = {
             x: chosenSample.sample_values.sort((a, b) => b.sample_values - a.sample_values).slice(0, 10).reverse(),
-            y: chosenSample.otu_ids,
+            // y: chosenSample.otu_ids,
             text: chosenSample.otu_labels,
+            name: "OTU Counts",
             type: "bar",
             orientation: "h"
         };
-console.log(trace1)
+        console.log(trace1)
         let traceData = [trace1];
 
-        // let config = { responsive: true };
+        let config = { responsive: true };
         var layout = {
-            xaxis: {
-                tickmode: "auto", // If "array", the placement of the ticks is set via `tickvals` and the tick text is `ticktext`.
-                tickvals: chosenSample.sample_values,
-                ticktext: chosenSample.otu_labels,
-                showtickprefix: 'all',
-                tickprefix: chosenSample.otu_labels,
+
+            yaxis: {
+                tickmode: 'linear',
+                // showtickprefix: 'all',
+                // tickprefix: ' OTU ID ',
+                ticktext: "OTU ID ${chosenSample.otu_ids}",
+                autotick: false,
+                ticks: 'outside',
+
+                ticklen: 4,
+                tickwidth: 4,
+                tickcolor: '#000'
             }
-        }
+        };
 
 
-        Plotly.newPlot("bar", traceData, layout);
+        Plotly.newPlot("bar", traceData, layout, config);
 
-        /// Create Bubble Chart
+        /// Create Bubble Chart using chosen sample
         ///NEEDS FORMATTING
         let trace2 = {
             x: chosenSample.otu_ids,
@@ -94,14 +101,14 @@ console.log(trace1)
         }
         Plotly.newPlot("bubble", traceData2, layout2);
 
-        //Create MetaData Chart
+        //Create MetaData Chart using chosen sample
         // narrow down our datasets to just include our desired sample to plot
         //define metadata array
         let metaDataSet = data.metadata;
         console.log("metaset", metaDataSet);
+        console.log(sample);
         //filter down to just the one we want-
-        let chosenSampleMeta = metaDataSet.filter(obj => obj.id === sample);
-
+        let chosenSampleMeta = metaDataSet.filter(metaDataSet.id === sample);
         console.log("meta", chosenSampleMeta);
 
     })
@@ -122,11 +129,11 @@ console.log(trace1)
 function optionChanged() {
     // Use D3 to select the dropdown menu
     dropdownMenu = d3.select("#selDataset");
-    dropdownMenu.on("change", function () {
-    updateSample = dropdownMenu.property("value");
-    createPlotly(updateSample);
-    });
-}
+    dropdownMenu.on("change") 
+        updateSample = dropdownMenu.property("value");
+        createPlotly(updateSample);
+    };
+
 
 // inputField.on("change", function() {
 // //     var newText = d3.event.target.value;
