@@ -36,12 +36,21 @@ function createPlotly(sample) {
 
     d3.json("samples.json").then((data) => {
         // narrow down our datasets to just include our desired sample to plot
-        //define samples array
+        // First take the json and break oout arrays 
         let sampleSet = data.samples;
-        console.log("set", sampleSet);
-        //filter down to just the one we want- beacuse it returns a list of one, grab [0]
+        let metaDataSet = data.metadata;
+        //Confirm and use as ref
+        console.log("sampleSet", sampleSet);
+        console.log("metaset", metaDataSet);
+
+        //filter down to just the one we want
+        //Samples returns a list of one, grab [0] to get the actual data inside it
         let chosenSample = sampleSet.filter(obj => obj.id === sample)[0];
-        console.log("chosen", chosenSample);
+        //Metadata needs two= not three because WHY DID THAT WORK DIFFERENTLY???
+        let chosenSampleMeta = metaDataSet.filter(obj => obj.id == sample)[0];
+
+        console.log("chosenSample", chosenSample);
+        console.log("metaSample", chosenSampleMeta);
 
         //Create the Bar Chart using chosen sample
         /// NEEDS FORMATTING
@@ -64,7 +73,7 @@ function createPlotly(sample) {
                 // showtickprefix: 'all',
                 // tickprefix: ' OTU ID ',
                 ticktext: "OTU ID ${chosenSample.otu_ids}",
-                autotick: false,
+                // autotick: false,
                 ticks: 'outside',
 
                 ticklen: 4,
@@ -101,45 +110,48 @@ function createPlotly(sample) {
         }
         Plotly.newPlot("bubble", traceData2, layout2);
 
-        //Create MetaData Chart using chosen sample
-        // narrow down our datasets to just include our desired sample to plot
-        //define metadata array
-        let metaDataSet = data.metadata;
-        console.log("metaset", metaDataSet);
-        console.log(sample);
-        //filter down to just the one we want-
-        let chosenSampleMeta = metaDataSet.filter(metaDataSet.id === sample);
-        console.log("meta", chosenSampleMeta);
 
-    })
-}
+        // //Metadata Box
+        let tbody = d3.select("tbody");
+
+        for (var key in chosenSampleMeta){
+
+            // Append one table row per student/grade
+            var row = tbody.append("tr");
+          
+            // append one cell for the student and one cell for the grade
+            row.append("td").text(key);
+            row.append("td").text(chosenSampleMeta[key]);
+          };
+        })
+
+        // for (var key in chosenSampleMeta) {
+        //     console.log(key, chosenSampleMeta[key]);
 
 
-// // Call createPlotly() when a change takes place to the DOM
-// d3.selectAll("#selDataset").on("change", createPlotly);
 
 
-// function optionChanged(updatedSample) {
-//     // Fetch new data each time a new sample is selected
-//     createPlotly(updatedSample);
-// }
+
+
+        }
+    
+
+
 
 
 // This function is called when a dropdown menu item is selected
 function optionChanged() {
     // Use D3 to select the dropdown menu
     dropdownMenu = d3.select("#selDataset");
-    dropdownMenu.on("change") 
-        updateSample = dropdownMenu.property("value");
-        createPlotly(updateSample);
-    };
+    // When it changes 
+    dropdownMenu.on("change");
+    // Grab the new vaule in the selector, call it update sample
+    
+    updateSample = dropdownMenu.property("value");
+    //Send that secection to createPlotly which will update the values for the images  
+   // additonally, clear the metadata otherwise it stacks on top
+    d3.selectAll('tr').remove()
+    createPlotly(updateSample);
+};
 
 
-// inputField.on("change", function() {
-// //     var newText = d3.event.target.value;
-// //     console.log(newText);
-// //   });
-
-
-
-// // //     createBar();
